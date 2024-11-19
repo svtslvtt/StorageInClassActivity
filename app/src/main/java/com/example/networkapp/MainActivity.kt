@@ -44,30 +44,44 @@ class MainActivity : AppCompatActivity() {
             downloadComic(numberEditText.text.toString())
         }
 
+
     }
 
     // Fetches comic from web as JSONObject
-    private fun downloadComic (comicId: String) {
+    private fun downloadComic(comicId: String) {
         val url = "https://xkcd.com/$comicId/info.0.json"
-        requestQueue.add (
-            JsonObjectRequest(url
-                , {showComic(it)}
-                , {}
+        requestQueue.add(
+            JsonObjectRequest(url, { showComic(it) }, {}
             )
         )
     }
 
     // Display a comic for a given comic JSON object
-    private fun showComic (comicObject: JSONObject) {
+    private fun showComic(comicObject: JSONObject) {
         titleTextView.text = comicObject.getString("title")
         descriptionTextView.text = comicObject.getString("alt")
         Picasso.get().load(comicObject.getString("img")).into(comicImageView)
+        saveComic(comicObject)
     }
 
     // Implement this function
     private fun saveComic(comicObject: JSONObject) {
 
+        val title = comicObject.getString("title")
+        val description = comicObject.getString("alt")
+        val imageUrl = comicObject.getString("img")
+        val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("title", title)
+        editor.putString("description", description)
+        editor.putString("imageUrl", imageUrl)
+        editor.apply()
+
+
+        Toast.makeText(this, "Comic saved", Toast.LENGTH_SHORT).show()
+
     }
+
 
 
 }
