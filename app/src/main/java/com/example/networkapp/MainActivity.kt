@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
             downloadComic(numberEditText.text.toString())
         }
 
+        loadSavedComic()
 
     }
 
@@ -82,6 +83,20 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
+    private fun loadSavedComic() {
+
+        val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
+        val title = sharedPreferences.getString("title", "")
+        val description = sharedPreferences.getString("description", "")
+        val imageUrl = sharedPreferences.getString("imageUrl", "")
+
+        if (!title.isNullOrEmpty() && !description.isNullOrEmpty() && !imageUrl.isNullOrEmpty()) {
+            titleTextView.text = title
+            descriptionTextView.text = description
+            Picasso.get().load(imageUrl).into(comicImageView)
+        }
+    }
 
 
 }
